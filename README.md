@@ -1,3 +1,4 @@
 # JamfScripts
 
-Collectioneur of Jamf scripts
+Collection of Jamf scripts to use With Casper Suite
+
