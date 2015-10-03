@@ -21,6 +21,9 @@ osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 #
 # https://javadl-esd-secure.oracle.com/update/mac/au-1.8.0_20.xml
 #
+####
+# Added a version check so Java won't be downloaded over and over again... 10/3/2015
+####
 
 OracleUpdateXML="https://javadl-esd-secure.oracle.com/update/mac/au-1.8.0_20.xml"
 

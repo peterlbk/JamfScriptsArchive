@@ -1,9 +1,5 @@
 #!/bin/sh
 
-if [[ "$USER" != "root" ]]; then
-  echo "You must run this script as root."
-  exit 1
-fi
 dmgfile="flash.dmg"
 volname="Flash"
 logfile="/Library/Logs/FlashUpdateScript.log"
