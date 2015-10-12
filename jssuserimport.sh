@@ -43,7 +43,9 @@
 #		-Returns a list of failed submissions
 #	-Updated by TJ Bauer, JAMF Software, LLC, on September 9th, 2014
 #		-Improved reading of file
-#   -Added interaction to secure the script
+#   -Updated by Peter Loobuyck, Switch on October 12th, 2015
+#       -Added interaction to secure the script
+#		-Added option to add Full Name
 #
 ####################################################################################################
 
@@ -69,7 +71,11 @@ echo "Now we'll ask for some information to log on. Server has to have fqdn and 
 read -p 'Enter server: ' server
 read -p 'Enter jss admin user : ' username
 read -sp 'Enter jss password: ' password
-
+echo -n "Do you want to import Full Name as a third column (y/n)? "
+read answer
+if echo "$answer" | grep -iq "^y" ;then
+    addfull=1
+fi
 #Set a counter for the loop
 counter="0"
 
@@ -81,11 +87,19 @@ do
 	line=`echo "$data" | head -n $counter | tail -n 1`
 	user=`echo "$line" | awk -F , '{print $1}'`
 	email=`echo "$line" | awk -F , '{print $2}'`
+	if [[ "$addfull" == "1" ]]; then 
+		fullname=`echo "$line" | awk -F , '{print $3}'`
+	fi
 	
 	echo "Attempting to create user - $fullname: id $user - $email"
 	
 	#Construct the XML
-	apiData="<user><name>${user}</name><email>${email}</email></user>"
+	if [[ "$addfull" == "1" ]]; then 
+		apiData="<user><name>${user}</name><email>${email}</email><full_name>${fullname}</full_name></user>"
+	else
+		apiData="<user><name>${user}</name><email>${email}</email></user>"
+	fi
+	
 	output=`curl -k -u $username:$password -H "Content-Type: text/xml" https://$server/JSSResource/users/id/0 -d "$apiData" -X POST`
 
 	#Error Checking
