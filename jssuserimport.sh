@@ -31,7 +31,7 @@
 # DESCRIPTION
 #
 #	This script reads a CSV of usernames and email addresses and imports them to the JSS.
-#	The format must be username in the first column and email address in the second, full name in the third
+#	The format must be username in the first column and email address in the second
 #
 ####################################################################################################
 #
@@ -43,6 +43,7 @@
 #		-Returns a list of failed submissions
 #	-Updated by TJ Bauer, JAMF Software, LLC, on September 9th, 2014
 #		-Improved reading of file
+#   -Added interaction to secure the script
 #
 ####################################################################################################
 
@@ -80,12 +81,11 @@ do
 	line=`echo "$data" | head -n $counter | tail -n 1`
 	user=`echo "$line" | awk -F , '{print $1}'`
 	email=`echo "$line" | awk -F , '{print $2}'`
-	fullname=`echo "$line" | awk -F , '{print $3}’`
 	
 	echo "Attempting to create user - $fullname: id $user - $email"
 	
 	#Construct the XML
-	apiData="<user><name>${user}</name><email>${email}</email><Full_Name>${fullname}</Full_Name></user>"
+	apiData="<user><name>${user}</name><email>${email}</email></user>"
 	output=`curl -k -u $username:$password -H "Content-Type: text/xml" https://$server/JSSResource/users/id/0 -d "$apiData" -X POST`
 
 	#Error Checking
