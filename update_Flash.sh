@@ -4,7 +4,7 @@ dmgfile="flash.dmg"
 volname="Flash"
 logfile="/Library/Logs/FlashUpdateScript.log"
 
-
+#
     latestver=`/usr/bin/curl -s http://www.adobe.com/software/flash/about/ | sed -n '/Safari/,/<\/tr/s/[^>]*>\([0-9].*\)<.*/\1/p'`
     # Get the version number of the currently-installed Flash Player, if any.
     shortver=${latestver:0:2}
