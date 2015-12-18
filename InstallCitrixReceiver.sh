@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 logfile="/Library/Logs/jss.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 PRODUCT="Receiver"
@@ -26,8 +26,8 @@ installcr ()
 
 
 # Check for installed version
-localmain=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$1'}`
-localminor=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$2'}`
+mainlocal=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$1'}`
+mainonline=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$2'}`
 
 
 
@@ -44,13 +44,9 @@ mainonline=`echo $onlinever | awk -F "." {'print$1'}`
 subonline=`echo $onlinever | awk -F "." {'print$2'}`
 
 # If main version differs, install
-mainlocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $1 }'`
-sublocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $2 }'`
-minlocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $3 }'`
-
-mainonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $1 }'`
-subonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $2 }'`
-minonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $3 }'`
+mainlocal=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $1 }'`
+sublocal=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $2 }'`
+minlocal=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $3 }'`
 
 if [ $mainlocal -lt $mainonline ]
 then 
