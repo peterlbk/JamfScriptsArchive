@@ -10,7 +10,7 @@ installcr ()
 	volname="Citrix Receiver"
 	url="https://downloadplugins.citrix.com.edgesuite.net/Mac/CitrixReceiverWeb.dmg"
 	/bin/echo "`date`: Downloading $PRODUCT." >> ${logfile}
-	/usr/bin/curl -o -k /tmp/image.dmg $url
+	/usr/bin/curl -k -o /tmp/image.dmg $url
 	/bin/echo "`date`: Mounting installer disk image." >> ${logfile}
 	/usr/bin/hdiutil attach /tmp/image.dmg -nobrowse -quiet
 	/bin/echo "`date`: Installing..." >> ${logfile}
