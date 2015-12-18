@@ -24,7 +24,6 @@ installcr ()
 }
 
 
-
 # Check for installed version
 mainlocal=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$1'}`
 mainonline=`defaults read /Applications/Citrix\ Receiver.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." {'print$2'}`
@@ -59,5 +58,3 @@ then
 	installcr
 	exit 0
 fi
-#end
-
