@@ -3,3 +3,5 @@
 
 # don't track .pyc files
 *.pyc
+
+?product=firefox-41.0.2-SSL&os=osx&lang=en-US
