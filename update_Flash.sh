@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 dmgfile="flash.dmg"
 volname="Flash"
@@ -22,7 +22,7 @@ logfile="/Library/Logs/FlashUpdateScript.log"
         /bin/echo "`date`: Mounting installer disk image." >> ${logfile}
         /usr/bin/hdiutil attach `dirname $0`/flash.dmg -nobrowse -quiet
         /bin/echo "`date`: Installing..." >> ${logfile}
-        /usr/sbin/installer -pkg /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app/Contents/Resources/Adobe\ Flash\ Player.pkg -target / > /dev/null
+        #/usr/sbin/installer -pkg /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app/Contents/Resources/Adobe\ Flash\ Player.pkg -target / > /dev/null
         /bin/sleep 10
         /bin/echo "`date`: Unmounting installer disk image." >> ${logfile}
         /usr/bin/hdiutil detach $(/bin/df | /usr/bin/grep ${volname} | awk '{print $1}') -quiet
