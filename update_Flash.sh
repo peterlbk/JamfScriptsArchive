@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 dmgfile="flash.dmg"
 volname="Flash"
