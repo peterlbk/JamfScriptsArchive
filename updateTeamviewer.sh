@@ -1,5 +1,5 @@
 #!/bin/sh -x
-logfile="/Library/Logs/mac2.log"
+logfile="/Library/Logs/jss-switch.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 
 # Teamviewer installation
@@ -35,14 +35,14 @@ sudo -u "$user" open -a /Applications/TeamViewerQS.app
 localver=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString`
 
 # If nothing has been installed then install & launch
-if [ -z "$localver" ]
+if [ -z ${localver} ]
 then 
 	installtv
 	launchtv
 	exit 0
 fi
 
-onlinever=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//'`
+onlinever=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Version" | sed -n 4p | awk -F "</h4>" '{print $1}' | cut -d" " -f2`
 
 # If latest version is installed then exit
 if [ "$localver" = "$onlinever" ]
@@ -56,11 +56,16 @@ mainlocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBu
 sublocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $2 }'`
 minlocal=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBundleShortVersionString | awk -F "." '{ print $3 }'`
 
-mainonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $1 }'`
-subonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $2 }'`
-minonline=`curl https://www.teamviewer.com/en/download/changelog/mac/  | grep "Version " | sed -n 2p | awk '{print $3}' | sed 's/.\{5\}$//' | awk -F "." '{ print $3 }'`
+mainonline=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Version" | sed -n 4p | awk -F "</h4>" '{print $1}' | cut -d" " -f2 | awk -F "." '{ print $1 }'`
+subonline=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Version" | sed -n 4p | awk -F "</h4>" '{print $1}' | cut -d" " -f2 | awk -F "." '{ print $2 }'`
+minonline=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Version" | sed -n 4p | awk -F "</h4>" '{print $1}' | cut -d" " -f2 | awk -F "." '{ print $3 }'`
 
-if [ $mainlocal -lt $mainonline ]
+if [ -z ${mainlocal} ]
+then 
+	installtv
+	launchtv
+	exit 0
+elif [ ${mainlocal} -lt ${mainonline} ]
 then 
 	installtv
 	launchtv
