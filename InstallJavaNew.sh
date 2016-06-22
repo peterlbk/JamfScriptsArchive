@@ -1,45 +1,54 @@
-#!/bin/sh -x
+#!/bin/bash -e
+
+# This script downloads and installs the latest Oracle Java 8 for compatible Macs
+
 # Determine OS version
 osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
+
+OracleUpdateXML="https://javadl-esd-secure.oracle.com/update/mac/au-1.8.0_20.xml"
 
 # check if newer version exists
 plugin="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Info.plist"
 if [ -f "$plugin" ]
 then
-	currentver=`/usr/bin/defaults read "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Info.plist" CFBundleShortVersionString`
-	echo " Current version is $currentver"
-	currentvermain=${currentver:5:1}
-	echo "Installed main version is $currentvermain"
-	currentvermin=${currentver:14:2}
-	echo "Installed minor version is $currentvermin"
-	onlineversionmain=`curl http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $4}'`
-	echo "Online main: $onlineversionmain"
-	onlineversionmin1=`curl http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $6}'`
-	onlineversionmin=${onlineversionmin1:0:2}
-	echo "Online minor: $onlineversionmin"
-	if [ -z "$currentvermain" ] || [ "$onlineversionmain" -gt "$currentvermain" ]
-	then
-		echo "Let's install Java! Main online version is higher than installed version."
-		installjava=1
-	fi
-	if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" -gt "$currentvermin" ]
-	then
-		echo "Let's install Java! Main online version is equal than installed version, but minor version is higher."
-		installjava=1
-	fi
-	if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" = "$currentvermin" ]
-	then
-		echo "Java is up-to-date!"
-	fi
+    currentver=`/usr/bin/defaults read "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Info.plist" CFBundleShortVersionString`
+    echo " Current version is $currentver"
+    currentvermain=${currentver:5:1}
+    echo "Installed main version is $currentvermain"
+    currentvermin=${currentver:14:2}
+    echo "Installed minor version is $currentvermin"
+    /usr/bin/curl --retry 3 -Lo /tmp/au-1.8.0_20.xml $OracleUpdateXML
+    onlineversion1=`cat /tmp/au-1.8.0_20.xml | awk -F \" /enclosure/'{print $(NF-1)}'`
+    onlineversion2=${onlineversion1:50:8}
+    onlineversionmain=${onlineversion2:2:1}
+    echo "Online main: $onlineversionmain"
+    onlineversionmin=${onlineversion2:6:2}
+    echo "Online minor: $onlineversionmin"
+    if [ "$onlineversionmain" -gt "$currentvermain" ]
+    then
+        echo "Let's install Java! Main online version is higher than installed version."
+        installjava=1
+    fi
+    if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" -gt "$currentvermin" ]
+    then
+        echo "Let's install Java! Main online version is equal than installed version, but minor version is higher."
+        installjava=1
+    fi
+    if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" = "$currentvermin" ]
+    then
+        echo "Java is up-to-date!"
+    fi
 else
-	echo "No java installed, let's install"
-	installjava=1
+    echo "No java installed, let's install"
+    installjava=1
 fi
 
 
-# Find Download URL
-fileURL=`curl http://www.java.com/en/download/manual.jsp | grep "Download Java for Mac OS X" | awk -F "\"" '{ print $4;exit}'`
+# Use the XML address defined in the OracleUpdateXML variable to query Oracle via curl 
+# for the complete address of the latest Oracle Java 8 installer disk image.
 
+
+fileURL=`/usr/bin/curl --silent $OracleUpdateXML | awk -F \" /enclosure/'{print $(NF-1)}'`
 
 # Specify name of downloaded disk image
 
@@ -51,47 +60,52 @@ if [[ ${osvers} -lt 7 ]]; then
 fi
 if [ "$installjava" = 1 ]
 then
-	echo "Start installing Java"
-	if [[ ${osvers} -ge 7 ]]; then
-    	/usr/bin/curl --retry 3 -Lo "$java_eight_dmg" "$fileURL"
+    echo "Start installing Java"
+    if [[ ${osvers} -ge 7 ]]; then
 
-    	# Specify a /tmp/java_eight.XXXX mountpoint for the disk image
- 
-    	TMPMOUNT=`/usr/bin/mktemp -d /tmp/java_eight.XXXX`
+        # Download the latest Oracle Java 8 software disk image
 
-    	# Mount the latest Oracle Java 8 disk image to /tmp/java_eight.XXXX mountpoint
- 
-    	hdiutil attach "$java_eight_dmg" -mountpoint "$TMPMOUNT" -nobrowse -noverify -noautoopen
+        /usr/bin/curl --retry 3 -Lo "$java_eight_dmg" "$fileURL"
 
-    	# Find the Java installer
-    	
-    	JAVAVOL=`ls /Volumes/ | grep "Java"`
-		  JAVAAPP=`ls "$TMPMOUNT" | grep "Java"`
-		  pkg_path=`ls "$TMPMOUNT"/"$JAVAAPP"/Contents/Resources/*Java*.pkg`
+        # Specify a /tmp/java_eight.XXXX mountpoint for the disk image
 
-    	# Check installer certificate
-    
-    	if [[ "${pkg_path}" != "" ]]; then
-        	signature_check=`/usr/sbin/pkgutil --check-signature "$pkg_path" | awk /'Developer ID Installer/{ print $5 }'`
-           	if [[ ${signature_check} = "Oracle" ]]; then
-             	# Install Oracle Java 8 from the installer package stored inside the disk image
-             	/usr/sbin/installer -dumplog -verbose -pkg "${pkg_path}" -target "/" > /dev/null 2>&1
-            fi
-    	fi
+        TMPMOUNT=`/usr/bin/mktemp -d /Volumes/java_eight.XXXX`
 
-    	# Clean-up
- 
-    	# Unmount the Oracle Java 8 disk image from /tmp/java_eight.XXXX
- 
-    	/usr/bin/hdiutil detach -force "$TMPMOUNT"
- 
-    	# Remove the /tmp/java_eight.XXXX mountpoint
- 
-    	/bin/rm -rf "$TMPMOUNT"
+        # Mount the latest Oracle Java disk image to /tmp/java_eight.XXXX mountpoint
 
-    	# Remove the downloaded disk image
+        hdiutil attach "$java_eight_dmg" -mountpoint "$TMPMOUNT" -nobrowse -noverify -noautoopen
 
-    	/bin/rm -rf "$java_eight_dmg"
+        # Install Oracle Java 8 from the installer package.
 
+        if [[ -e "$(/usr/bin/find $TMPMOUNT -name *Java*.pkg)" ]]; then    
+            pkg_path=`/usr/bin/find $TMPMOUNT -name *Java*.pkg`
+        elif [[ -e "$(/usr/bin/find $TMPMOUNT -name *Java*.mpkg)" ]]; then    
+            pkg_path=`/usr/bin/find $TMPMOUNT -name *Java*.mpkg`
+        fi
+
+        # Before installation, the installer's developer certificate is checked 
+
+        if [[ "${pkg_path}" != "" ]]; then
+                echo "installing Java from ${pkg_path}..."
+                /usr/sbin/installer -dumplog -verbose -pkg "${pkg_path}" -target "/" > /dev/null 2>&1
+
+        fi
+
+        # Clean-up
+
+        # Unmount the disk image from /tmp/java_eight.XXXX
+
+        /usr/bin/hdiutil detach -force "$TMPMOUNT"
+
+        # Remove the /tmp/java_eight.XXXX mountpoint
+
+        /bin/rm -rf "$TMPMOUNT"
+
+        # Remove the downloaded disk image
+
+        /bin/rm -rf "$java_eight_dmg"
+
+        # Remove xml file
+        /bin/rm -rf /tmp/au-1.8.0_20.xml
     fi
 fi
