@@ -5,7 +5,7 @@ volname="Flash"
 logfile="/Library/Logs/FlashUpdateScript.log"
 
 #
-    latestver=`/usr/bin/curl -s http://www.adobe.com/software/flash/about/ | sed -n '/Safari/,/<\/tr/s/[^>]*>\([0-9].*\)<.*/\1/p'`
+    latestver=`/usr/bin/curl -s http://www.adobe.com/software/flash/about/ | sed -n '/Safari/,/<\/tr/s/[^>]*>\([0-9].*\)<.*/\1/p' | head -1`
     # Get the version number of the currently-installed Flash Player, if any.
     shortver=${latestver:0:2}
     url=http://fpdownload.macromedia.com/get/flashplayer/current/licensing/mac/install_flash_player_"${shortver}"_osx.dmg
@@ -22,7 +22,7 @@ logfile="/Library/Logs/FlashUpdateScript.log"
         /bin/echo "`date`: Mounting installer disk image." >> ${logfile}
         /usr/bin/hdiutil attach `dirname $0`/flash.dmg -nobrowse -quiet
         /bin/echo "`date`: Installing..." >> ${logfile}
-        #/usr/sbin/installer -pkg /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app/Contents/Resources/Adobe\ Flash\ Player.pkg -target / > /dev/null
+        /usr/sbin/installer -pkg /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app/Contents/Resources/Adobe\ Flash\ Player.pkg -target / > /dev/null
         /bin/sleep 10
         /bin/echo "`date`: Unmounting installer disk image." >> ${logfile}
         /usr/bin/hdiutil detach $(/bin/df | /usr/bin/grep ${volname} | awk '{print $1}') -quiet
