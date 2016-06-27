@@ -36,7 +36,6 @@ installar ()
 	/bin/echo "`date`: Installing - Updating ${volname}." >> ${logfile}
 	INSTALLER=`ls /Volumes/AcroRdrDC_${OVERALL}_MUI  | grep Acro`
 	/usr/sbin/installer -pkg /Volumes/AcroRdrDC_${OVERALL}_MUI/${INSTALLER} -target / > /dev/null
-	exit 0
 	/bin/echo "`date`: Unmounting installer disk image." >> ${logfile}
 	/usr/bin/hdiutil detach $(/bin/df | /usr/bin/grep ${volname} | awk '{print $1}') -quiet
 	/bin/echo "`date`: Deleting disk image." >> ${logfile}
