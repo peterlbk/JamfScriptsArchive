@@ -1,11 +1,13 @@
 #!/bin/sh -x
 logfile="/Library/Logs/kbc_scb.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
+OSvers_URL=$( sw_vers -productVersion | sed 's/[.]/_/g' )
+userAgent="User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X ${OSvers_URL}) ; rv:32.0) Gecko/20100101 Firefox/32.0"
 
-
-curl -A "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:32.0) Gecko/20100101 Firefox/32.0" -L https://get.adobe.com/reader/?loc=nl > /tmp/dc.html
+curl -A "${userAgent}" -L https://get.adobe.com/reader/?loc=nl > /tmp/dc.html
 ONLINEVER=`cat /tmp/dc.html | grep Versie | awk -F "Versie " '{print$2}' | awk -F "</" '{print$1}'`
 ONLINEDMG=`cat /tmp/dc.html | grep mainInstaller | head -1 | awk -F "\"" '{print$2}'`
+
 
 IFS='.' read over1 over2 over3 <<< "$ONLINEVER"
 over1=${over1:2}
