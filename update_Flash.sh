@@ -1,4 +1,18 @@
 #!/bin/sh
+#####################################################################################################
+#
+# ABOUT THIS PROGRAM
+#
+# NAME
+#	UpdateFlash.sh -- Installs or updates Adobe Flash Player
+#
+#
+####################################################################################################
+#
+#	Peter Loobuyck grabbed bits from the net and composed this on Peter Loobuyck
+#
+####################################################################################################
+
 
 dmgfile="flash.dmg"
 volname="Flash"
