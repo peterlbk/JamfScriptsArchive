@@ -38,7 +38,7 @@ then
 	exit 0
 fi
 
-onlinever=`curl https://www.citrix.nl/downloads/citrix-receiver.html | grep "receiver-for-mac-latest.html" | awk -F "Receiver" {'print$2'} | rev | cut -c 81- | rev`
+onlinever=`curl https://www.citrix.nl/downloads/citrix-receiver.html | grep "receiver-for-mac-latest.html" | awk -F "Receiver" {'print$2'} | rev | cut -c 81- | rev | head -n1`
 mainonline=`echo $onlinever | awk -F "." {'print$1'}`
 subonline=`echo $onlinever | awk -F "." {'print$2'}`
 
