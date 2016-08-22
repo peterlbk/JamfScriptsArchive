@@ -23,6 +23,7 @@ installtv ()
 	/bin/rm `/tmp/teamviewer.dmg`/${dmgfile}
 }
 
+
 launchtv ()
 {
 /bin/echo "`date`: Launching Teamviewer..." >> ${logfile}
@@ -36,7 +37,7 @@ localver=`defaults read /Applications/TeamViewerQS.app/Contents/Info.plist CFBun
 
 # If nothing has been installed then install & launch
 if [ -z ${localver} ]
-then 
+then
 	installtv
 	launchtv
 	exit 0
@@ -46,7 +47,7 @@ onlinever=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Versio
 
 # If latest version is installed then exit
 if [ "$localver" = "$onlinever" ]
-then 
+then
 	launchtv
 	exit 0
 fi
@@ -61,24 +62,23 @@ subonline=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Versio
 minonline=`curl http://www.teamviewer.com/en/download/changelog/  | grep "Version" | sed -n 4p | awk -F "</h4>" '{print $1}' | cut -d" " -f2 | awk -F "." '{ print $3 }'`
 
 if [ -z ${mainlocal} ]
-then 
+then
 	installtv
 	launchtv
 	exit 0
 elif [ ${mainlocal} -lt ${mainonline} ]
-then 
+then
 	installtv
 	launchtv
 	exit 0
 elif [ $sublocal -lt $subonline ]
-then 
+then
 	installtv
 	launchtv
 	exit 0
 elif [ $minlocal -lt $minonline ]
-then 
+then
 	installtv
 	launchtv
 	exit 0
 fi
-

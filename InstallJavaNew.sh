@@ -49,3 +49,55 @@ if [[ ${osvers} -lt 7 ]]; then
   echo "Oracle Java 8 is not available for Mac OS X 10.6.8 or earlier."
   exit 0
 fi
+
+if [ "$installjava" = 1 ]
+then
+    echo "Start installing Java"
+    if [[ ${osvers} -ge 7 ]]; then
+
+        # Download the latest Oracle Java 8 software disk image
+
+        /usr/bin/curl --retry 3 -Lo "$java_eight_dmg" "$fileURL"
+
+        # Specify a /tmp/java_eight.XXXX mountpoint for the disk image
+
+        TMPMOUNT=`/usr/bin/mktemp -d /Volumes/java_eight.XXXX`
+
+        # Mount the latest Oracle Java disk image to /tmp/java_eight.XXXX mountpoint
+
+        hdiutil attach "$java_eight_dmg" -mountpoint "$TMPMOUNT" -nobrowse -noverify -noautoopen
+
+        # Install Oracle Java 8 from the installer package.
+
+        if [[ -e "$(/usr/bin/find $TMPMOUNT -name *Java*.pkg)" ]]; then    
+            pkg_path=`/usr/bin/find $TMPMOUNT -name *Java*.pkg`
+        elif [[ -e "$(/usr/bin/find $TMPMOUNT -name *Java*.mpkg)" ]]; then    
+            pkg_path=`/usr/bin/find $TMPMOUNT -name *Java*.mpkg`
+        fi
+
+        # Before installation, the installer's developer certificate is checked 
+
+        if [[ "${pkg_path}" != "" ]]; then
+                echo "installing Java from ${pkg_path}..."
+                /usr/sbin/installer -dumplog -verbose -pkg "${pkg_path}" -target "/" > /dev/null 2>&1
+
+        fi
+
+        # Clean-up
+
+        # Unmount the disk image from /tmp/java_eight.XXXX
+
+        /usr/bin/hdiutil detach -force "$TMPMOUNT"
+
+        # Remove the /tmp/java_eight.XXXX mountpoint
+
+        /bin/rm -rf "$TMPMOUNT"
+
+        # Remove the downloaded disk image
+
+        /bin/rm -rf "$java_eight_dmg"
+
+        # Remove xml file
+        /bin/rm -rf /tmp/au-1.8.0_20.xml
+    fi
+fi
