@@ -19,3 +19,4 @@ PRODUCT="Google Drive"
 	/usr/bin/hdiutil detach $(/bin/df | /usr/bin/grep ${volname} | awk '{print $1}') -quiet
 	/bin/sleep 3
 	open -a /Applications/Google\ Drive.app/
+ 
