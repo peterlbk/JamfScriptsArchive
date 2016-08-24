@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 logfile="/Library/Logs/kbc_scb.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 
