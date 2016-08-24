@@ -1,5 +1,5 @@
 #!/bin/sh
-logfile="/Library/Logs/kbc_scb.log"
+logfile="/Library/Logs/jamf.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 
 
