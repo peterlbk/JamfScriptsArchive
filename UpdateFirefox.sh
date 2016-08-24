@@ -19,7 +19,7 @@ installff ()
 	cd /tmp
 	volname="Firefox"
 	/bin/echo "`date`: Downloading Firefox..." >> ${logfile}
-	DLVER=`curl https://www.mozilla.org/en-US/install | grep download.mozilla.org | awk '{print $4}' | grep osx  | awk -F "'" '{print $2}' | sed 's/\&amp;/\&/g' | sed 's/firefox-/firefox-'$ONLINEVER'-SSL/g'`
+	DLVER=`curl https://www.mozilla.org/en-US/install | grep download.mozilla.org | grep "osx" | head -1 | awk -F "\"" '{print$2}'`
 	curl -L -o /tmp/firefox.dmg $DLVER
 	/bin/echo "`date`: Mounting installer disk image." >> ${logfile}
 	/usr/bin/hdiutil attach /tmp/firefox.dmg -nobrowse -quiet
