@@ -29,3 +29,5 @@ fi
 
 REMAPP "Siri"
 killall Dock
+
+rm $DOCKUTIL
