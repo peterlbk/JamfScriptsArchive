@@ -28,3 +28,4 @@ fi
 }
 
 REMAPP "Siri"
+killall Dock
