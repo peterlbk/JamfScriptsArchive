@@ -1,5 +1,5 @@
 #!/bin/sh -x
-logfile="/Library/Logs/kbc_scb.log"
+logfile="/Library/Logs/jss.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 OSvers_URL=$( sw_vers -productVersion | sed 's/[.]/_/g' )
 userAgent="User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X ${OSvers_URL}) ; rv:32.0) Gecko/20100101 Firefox/32.0"
