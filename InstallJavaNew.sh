@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 # Determine OS version
 osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 
@@ -10,11 +10,11 @@ then
 	echo " Current version is $currentver"
 	currentvermain=${currentver:5:1}
 	echo "Installed main version is $currentvermain"
-	currentvermin=${currentver:14:2}
+	currentvermin=${currentver:14:3}
 	echo "Installed minor version is $currentvermin"
-	onlineversionmain=`curl http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $4}'`
+	onlineversionmain=`curl -L http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $4}'`
 	echo "Online main: $onlineversionmain"
-	onlineversionmin1=`curl http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $6}' | awk -F "<" '{ print $1}'`
+	onlineversionmin1=`curl -L http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $6}' | awk -F "<" '{ print $1}'`
 	onlineversionmin=${onlineversionmin1:0:3}
 	echo "Online minor: $onlineversionmin"
 	if [ -z "$currentvermain" ] || [ "$onlineversionmain" -gt "$currentvermain" ]
