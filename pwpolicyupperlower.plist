@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>policyCategoryAuthentication</key>
+  <array>
+    <dict>
+        <key>policyContent</key>
+        <string>policyAttributePassword matches '(.*[A-Z].*[a-z].*)|(.*[a-z].*[A-
+  Z].*)'</string>
+        <key>policyContentDescription</key>
+        <dict>
+          <key>de</key>
+          <string>Das Passwort muss sowohl Groß- als auch Kleinbuchstaben
+  enthalten</string>
+          <key>default</key>
+          <string>Password must have both uppercase and lowercase letters</string>
+		  <key>en</key>
+		          <string>Password must have both uppercase and lowercase letters</string>
+		          <key>es</key>
+		          <string>La contraseña debe tener letras mayúsculas y minúsculas</string>
+		          <key>fr</key>
+		          <string>Le mot de passe doit contenir des majuscules et des
+		  minuscules</string>
+		          <key>it</key>
+		  <string>La password deve contenere lettere maiuscole e minuscole</string> <key>ja</key> <string>パスワードには大文字と小文字の両方を含める必要があります</string> <key>ko</key>
+		  <string>암호는 대문자 및 소문자를 모두 포함해야 합니다.</string>
+		  <key>nl</key>
+		  <string>Het wachtwoord moet hoofdetters en kleine letters bevatten</string> <key>zh-Hans</key>
+		  <string>密码必须包含大写字母和小写字母</string>
+		  <key>zh-Hant</key>
+		  <string>密碼必須有大寫及小寫字母</string>
+		        </dict>
+		        <key>policyIdentifier</key>
+		        <string>com.apple.uppercaseAndLowercase</string>
+		      </dict>
+			    </array>
+			  </dict>
+			  </plist>
