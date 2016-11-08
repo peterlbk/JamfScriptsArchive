@@ -17,7 +17,7 @@ then
 	onlineversionmin1=`curl -L http://www.java.com/en/download/manual.jsp | grep "Recommended Version" | awk '{ print $6}' | awk -F "<" '{ print $1}'`
 	onlineversionmin=${onlineversionmin1:0:3}
 	echo "Online minor: $onlineversionmin"
-	if [ -z "$currentvermain" ] || [ "$onlineversionmain" -gt "$currentvermain" ]
+	if [ -z "${currentvermain}" ] || [ "${onlineversionmain}" -gt "${currentvermain}" ]
 	then
 		echo "Let's install Java! Main online version is higher than installed version."
 		installjava=1
@@ -38,7 +38,7 @@ fi
 
 
 # Find Download URL
-fileURL=`curl http://www.java.com/en/download/manual.jsp | grep "Download Java for Mac OS X" | awk -F "\"" '{ print $4;exit}'`
+fileURL=`curl -L http://www.java.com/en/download/manual.jsp | grep "Download Java for Mac OS X" | awk -F "\"" '{ print $4;exit}'`
 
 
 # Specify name of downloaded disk image
