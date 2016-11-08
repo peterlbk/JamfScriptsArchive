@@ -1,5 +1,5 @@
 #!/bin/sh -x
-logfile="/Library/Logs/jss-switch.log"
+logfile="/Library/Logs/jamf.log"
 user=`ls -l /dev/console | cut -d " " -f 4`
 
 # Teamviewer installation
