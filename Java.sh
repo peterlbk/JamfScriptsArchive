@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 # Determine OS version
 osvers=$(sw_vers -productVersion | awk -F. '{print $2}')
 
@@ -22,12 +22,12 @@ then
 		echo "Let's install Java! Main online version is higher than installed version."
 		installjava=1
 	fi
-	if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" -gt "$currentvermin" ]
+	if [ "${onlineversionmain}" = "${currentvermain}" ] && [ "${onlineversionmin}" -gt "${currentvermin}" ]
 	then
 		echo "Let's install Java! Main online version is equal than installed version, but minor version is higher."
 		installjava=1
 	fi
-	if [ "$onlineversionmain" = "$currentvermain" ] && [ "$onlineversionmin" = "$currentvermin" ]
+	if [ "${onlineversionmain}" = "${currentvermain}" ] && [ "${onlineversionmin}" = "${currentvermin}" ]
 	then
 		echo "Java is up-to-date!"
 	fi
