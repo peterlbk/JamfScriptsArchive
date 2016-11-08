@@ -9,14 +9,14 @@
 #
 ####################################################################################################
 #
-#	Peter Loobuyck grabbed bits from the net and composed this on Peter Loobuyck
+#	Peter Loobuyck grabbed bits from the net 
 #
 ####################################################################################################
 
 
 dmgfile="flash.dmg"
 volname="Flash"
-logfile="/Library/Logs/FlashUpdateScript.log"
+logfile="/Library/Logs/jamf.log"
 
 #
     latestver=`/usr/bin/curl -s http://www.adobe.com/software/flash/about/ | sed -n '/Safari/,/<\/tr/s/[^>]*>\([0-9].*\)<.*/\1/p' | head -1`
